@@ -2,7 +2,6 @@
   <% if user.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
       <ul>
         <% user.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -12,18 +11,32 @@
   <% end %>
 
   <div class="field form-group">
-      <%= form.text_field :first_name, class:"form-control", placeholder:"First Name" %>
+    <%= form.text_field :first_name, class: "form-control", placeholder: "First Name" %>
   </div>
 
   <div class="field form-group">
-    <%= form.text_field :last_name, class:"form-control", placeholder:"First Name" %>
+    <%= form.text_field :last_name, class: "form-control", placeholder: "Last Name" %>
   </div>
 
   <div class="field form-group">
-    <%= form.text_field :email, class:"form-control", placeholder:"First Name" %>
+    <%= form.text_field :email, class: "form-control", placeholder: "Email" %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.password_field :password, class: "form-control", placeholder: "Password" %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.password_field :password_confirmation, class: "form-control", placeholder: "Confirm Password" %>
+  </div>
+
+  <!-- Add Admin checkbox -->
+  <div class="field form-group">
+    <%= form.check_box :admin %>
+    <%= form.label :admin, "Assign Admin Role" %>
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.submit "Create User", class: "btn btn-primary" %>
   </div>
 <% end %>

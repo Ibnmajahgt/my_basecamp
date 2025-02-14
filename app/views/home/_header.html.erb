@@ -12,22 +12,30 @@
         <%= link_to 'About Us', home_about_path, class: "nav-link" %>
       </li>
 
-      
       <% if user_signed_in? %>
         <li class="nav-item">
           <%= link_to 'Projects', projects_path, class: "nav-link" %>
         </li>
-               <li class="nav-item">
-        <%= link_to 'New Project', new_project_path, class: "nav-link" %>
+        <li class="nav-item">
+          <%= link_to 'New Project', new_project_path, class: "nav-link" %>
         </li>
 
         <li class="nav-item">
           <%= link_to 'Profile Edit', edit_user_registration_path, class: "nav-link" %>
         </li>
-        <li class="nav-item">
-          <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, class: "nav-link", data: { turbo: false } %>
-        </li>
 
+        <!-- 🔹 Admin-Only Links -->
+        <% if current_user.has_role?(:admin) %>
+          <li class="nav-item">
+            <%= link_to 'User Management', users_path, class: "nav-link" %> <!-- See Users Table -->
+          </li>
+          
+        <% end %>
+        <!-- 🔹 End Admin-Only Links -->
+
+        <li class="nav-item">
+        <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, class: "btn btn-danger", data: { turbo: false } %>
+        </li>
       <% else %>
         <li class="nav-item">
           <%= link_to 'Sign Up', new_user_registration_path, class: "nav-link" %>

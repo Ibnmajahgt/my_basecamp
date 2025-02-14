@@ -1,11 +1,20 @@
-<% content_for :title, "New project" %>
+<% content_for :title, "New Project" %>
 
-<h1>New project</h1>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white text-center">
+          <h3 class="mb-0">Create a New Project</h3>
+        </div>
+        <div class="card-body">
+          <%= render "form", project: @project %>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<%= render "form", project: @project %>
-
-<br>
-
-<div>
-  <%= link_to "Back to projects", projects_path %>
+  <div class="mt-3 text-center">
+    <%= link_to "Back to Projects", projects_path, class: "btn btn-secondary" %>
+  </div>
 </div>
