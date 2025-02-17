@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[show edit update destroy]
+  before_action :set_project, only: %i[show edit update destroy destroy_attachment show_attachment]
   before_action :authenticate_user!  # Ensure the user is authenticated
-  before_action :authorize_user!, only: %i[edit update destroy]  # Restrict access
+  before_action :authorize_user!, only: %i[edit update destroy destroy_attachment]  # Restrict access to admins and project owner
 
   # GET /projects or /projects.json
   def index
@@ -55,6 +55,24 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # DELETE /projects/1/destroy_attachment/:attachment_id
+  def destroy_attachment
+    @attachment = @project.attachments.find(params[:attachment_id])
+
+    if current_user.admin? || current_user == @project.user
+      @attachment.purge # Purge the attachment from ActiveStorage
+      redirect_to @project, notice: "Attachment was successfully removed."
+    else
+      redirect_to @project, alert: "You are not authorized to remove this attachment."
+    end
+  end
+
+  # Show attachment page
+  def show_attachment
+    @attachment = @project.attachments.find(params[:attachment_id])
+    # If needed, add any logic to show file previews here, but we'll assume the file is downloadable
+  end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.
@@ -71,6 +89,6 @@ class ProjectsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.require(:project).permit(:name, :description)
+      params.require(:project).permit(:name, :description, attachments: [])  # Allow attachments to be uploaded
     end
 end

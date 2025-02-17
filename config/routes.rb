@@ -1,5 +1,7 @@
+# config/routes.rb
+
 Rails.application.routes.draw do
-  devise_for :users  # Move this to the top!
+  devise_for :users  # Keep Devise at the top for authentication
 
   resources :users do
     member do
@@ -8,12 +10,17 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :projects
+  resources :projects do
+    # Add the route for destroying an attachment
+    member do
+      delete 'destroy_attachment/:attachment_id', to: 'projects#destroy_attachment', as: 'destroy_attachment'
+      # Route for showing the attachment
+      get 'show_attachment/:attachment_id', to: 'projects#show_attachment', as: 'show_attachment'
+    end
+  end
 
-  # get "home/index"
+  # Other routes
   get "home/about"
   root "home#index"
-
-  # Health check route
   get "up" => "rails/health#show", as: :rails_health_check
 end

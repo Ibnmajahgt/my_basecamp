@@ -1,0 +1,29 @@
+<!-- app/views/projects/show_attachment.html.erb -->
+
+<p class="alert alert-success"><%= notice %></p>
+
+<div class="card mb-4">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">Attachment: <%= @attachment ? @attachment.filename.to_s : 'Not Found' %></h5>
+  </div>
+  <div class="card-body">
+    <!-- Display the attachment -->
+    <% if @attachment %>
+      <div class="attachment">
+        <% if @attachment.content_type.starts_with?('image/') %>
+          <%= image_tag rails_blob_path(@attachment, disposition: "inline"), class: "img-fluid" %>
+          <%= link_to "Download this attachment", rails_blob_path(@attachment, disposition: "attachment"), class: "btn btn-primary" %>
+
+        <% else %>
+          <p>This is a <%= @attachment.content_type.split('/').last %> file.</p>
+          <%= link_to "Download this attachment", rails_blob_path(@attachment, disposition: "attachment"), class: "btn btn-primary" %>
+
+        <% end %>
+      </div>
+    <% else %>
+      <p>Attachment not found.</p>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to "Back to Project", @project, class: "btn btn-secondary" %>

@@ -25,6 +25,12 @@
   <!-- Hidden Field for User Association -->
   <%= form.hidden_field :user_id, value: current_user.id %>
 
+  <!-- Attach Files Field -->
+  <div class="form-group">
+    <%= form.label :attachments, "Attach Files", class: "form-label" %>
+    <%= form.file_field :attachments, multiple: true, class: "form-control" %>
+  </div>
+
   <!-- Submit Button -->
   <div class="form-group">
     <%= form.submit "Submit", class: "btn btn-primary btn-block" %>

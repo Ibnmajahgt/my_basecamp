@@ -16,6 +16,21 @@
         Unknown User
       <% end %>
     </p>
+
+    <!-- Display Attachments -->
+    <h4>Attachments:</h4>
+    <% @project.attachments.each do |attachment| %>
+      <div class="attachment">
+        <!-- Link to the attachment show page -->
+        <%= link_to "View #{attachment.filename.to_s}", show_attachment_project_path(@project, attachment_id: attachment.id), class: "btn btn-link" %>
+      </div>
+
+      <!-- Provide an option to delete attachment (only for project owner or admin) -->
+      <% if current_user == @project.user || current_user.admin? %>
+        <%= link_to "Remove", destroy_attachment_project_path(@project, attachment_id: attachment.id), method: :delete, data: { confirm: "Are you sure you want to remove this attachment?" }, class: "btn btn-danger btn-sm" %>
+      
+        <% end %>
+    <% end %>
   </div>
 </div>
 
