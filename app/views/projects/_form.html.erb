@@ -10,16 +10,22 @@
     </div>
   <% end %>
 
+  <!-- Project Name -->
   <div class="form-group">
     <%= form.label :name, class: "form-label" %>
     <%= form.text_field :name, class: "form-control", placeholder: "Enter project name" %>
   </div>
 
+  <!-- Project Description -->
   <div class="form-group">
     <%= form.label :description, class: "form-label" %>
     <%= form.text_area :description, class: "form-control", placeholder: "Enter project description", rows: 4 %>
   </div>
 
+  <!-- Hidden Field for User Association -->
+  <%= form.hidden_field :user_id, value: current_user.id %>
+
+  <!-- Submit Button -->
   <div class="form-group">
     <%= form.submit "Submit", class: "btn btn-primary btn-block" %>
   </div>

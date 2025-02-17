@@ -1,10 +1,11 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: %i[show edit update destroy]
   before_action :authenticate_user!  # Ensure the user is authenticated
+  before_action :authorize_user!, only: %i[edit update destroy]  # Restrict access
 
   # GET /projects or /projects.json
   def index
-    @projects = Project.all
+    @projects = Project.includes(:user).all  # Eager load user details
   end
 
   # GET /projects/1 or /projects/1.json
@@ -13,12 +14,12 @@ class ProjectsController < ApplicationController
 
   # GET /projects/new
   def new
-    @project = current_user.projects.build  # Automatically associate the project with the current user
+    @project = current_user.projects.build  # Associate the project with the user
   end
 
   # POST /projects or /projects.json
   def create
-    @project = current_user.projects.build(project_params)  # Associate with the current user
+    @project = current_user.projects.build(project_params)  # Associate project with user
 
     respond_to do |format|
       if @project.save
@@ -49,15 +50,23 @@ class ProjectsController < ApplicationController
     @project.destroy
 
     respond_to do |format|
-      format.html { redirect_to projects_url, notice: "Project was successfully destroyed." }
+      format.html { redirect_to projects_url, notice: "Project was successfully deleted." }
       format.json { head :no_content }
     end
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_project
       @project = Project.find(params[:id])
+    end
+
+    # Restrict editing and deleting to only admins and the project owner
+    def authorize_user!
+      unless current_user.admin? || current_user == @project.user
+        redirect_to projects_path, alert: "You are not authorized to perform this action."
+      end
     end
 
     # Only allow a list of trusted parameters through.
