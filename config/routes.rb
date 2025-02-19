@@ -1,20 +1,21 @@
-# config/routes.rb
-
 Rails.application.routes.draw do
   devise_for :users  # Keep Devise at the top for authentication
 
   resources :users do
     member do
-      get :assign_admin  # Changed from PUT to GET
-      get :remove_admin  # Changed from PUT to GET
+      get :assign_admin
+      get :remove_admin
     end
   end
 
   resources :projects do
-    # Add the route for destroying an attachment
+    # Add discussions as a nested resource
+    resources :discussions, only: [:new, :create, :index, :show, :edit, :update, :destroy] do  # ✅ Added :edit and :update
+      resources :messages, only: [:new, :create, :show, :edit, :update, :destroy]
+    end
+
     member do
       delete 'destroy_attachment/:attachment_id', to: 'projects#destroy_attachment', as: 'destroy_attachment'
-      # Route for showing the attachment
       get 'show_attachment/:attachment_id', to: 'projects#show_attachment', as: 'show_attachment'
     end
   end

@@ -1,0 +1,22 @@
+<h2>Post a New Message in <%= @discussion.title %></h2>
+
+<%= form_with model: [@project, @discussion, @message], local: true do |form| %>
+  <% if @message.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @message.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :content %>
+    <%= form.text_area :content, class: "form-control", rows: 5 %>
+  </div>
+
+  <%= form.submit 'Post Message', class: "btn btn-primary" %>
+<% end %>
+</br>
+<%= link_to "Back to Discussion", project_discussion_path(@project, @discussion), class: "btn btn-secondary" %>

@@ -1,0 +1,23 @@
+<div id="<%= dom_id message %>" class="message">
+  <p>
+    <strong>Content:</strong>
+    <%= message.content %>
+  </p>
+
+  <p>
+    <strong>Discussion:</strong>
+    <%= message.discussion_id %>
+  </p>
+
+  <p>
+    <strong>User:</strong>
+    <%= message.user.email %>
+  </p>
+
+  <% if current_user.admin? || current_user == message.user %>
+    <div class="mt-2">
+      <%= link_to "Edit", edit_project_discussion_message_path(@project, @discussion, message), class: "btn btn-warning btn-sm" %>
+      <%= link_to "Delete", project_discussion_message_path(@project, @discussion, message), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<p class="text-success"><%= notice %></p>
+
+<% content_for :title, "Discussions" %>
+
+<h1>Discussions</h1>
+
+<% if @discussions.any? %>
+  <div id="discussions" class="list-group">
+    <% @discussions.each do |discussion| %>
+      <div class="list-group-item">
+        <h5><%= link_to discussion.title, project_discussion_path(@project, discussion) %></h5> <!-- ✅ Fixed -->
+        <p>Started by <strong><%= discussion.user.email %></strong></p>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No discussions available.</p>
+<% end %>
+
+<% if user_signed_in? && current_user.admin? %>
+  <%= link_to "Create Thread", new_project_discussion_path(@project), class: "btn btn-primary mt-3" %>
+<% end %>

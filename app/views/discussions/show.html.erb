@@ -1,0 +1,52 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="card mt-4">
+  <div class="card-header bg-info text-white">
+    <h5 class="mb-0"><%= @discussion.title %></h5>
+  </div>
+  <div class="card-body">
+    <p><strong>Created by:</strong> <%= @discussion.user&.email || "Unknown" %></p>
+
+    <h5>Messages</h5>
+
+    <% if @messages.any? %>
+      <ul class="list-group">
+        <% @messages.each do |message| %>
+          <li class="list-group-item">
+            <strong><%= message.user.email %></strong>: <%= message.content %>
+
+            <% if current_user.admin? || current_user == message.user %>
+              <div class="float-end">
+                <%= link_to "Edit", edit_project_discussion_message_path(@project, @discussion, message), class: "btn btn-warning btn-sm mx-1" %>
+                <%= link_to "Delete", project_discussion_message_path(@project, @discussion, message), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No messages yet.</p>
+    <% end %>
+
+    <% if user_signed_in? %>
+      <%= link_to "Reply", new_project_discussion_message_path(@project, @discussion), class: "btn btn-primary mt-3" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="mt-4">
+  <% if current_user.admin? %>
+    <%= link_to "Edit Discussion", edit_project_discussion_path(@project, @discussion), class: "btn btn-warning" %>
+    <%= link_to "Back to Discussions", project_discussions_path(@project), class: "btn btn-secondary mx-2" %>
+  <% end %>
+  
+  <%= link_to "Back to Project", project_path(@project), class: "btn btn-primary" %>
+  </br>
+  </br>
+  <% if current_user.admin? %>
+    <%= button_to "Delete Discussion", project_discussion_path(@project, @discussion), 
+      method: :delete, 
+      data: { confirm: "Are you sure?" }, 
+      class: "btn btn-danger" %>
+  <% end %>
+</div>

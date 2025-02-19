@@ -1,0 +1,22 @@
+<h2>Create a New Discussion</h2>
+
+<%= form_with model: [@project, @discussion] do |form| %>
+  <% if @discussion.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @discussion.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <%= form.submit 'Create Discussion', class: "btn btn-primary" %>
+<% end %>
+</br>
+<%= link_to "Back to Project", @project, class: "btn btn-secondary" %>

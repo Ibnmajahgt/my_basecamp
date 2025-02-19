@@ -1,0 +1,12 @@
+<% content_for :title, "Editing Message" %>
+
+<h1 class="mb-4">Editing Message</h1>
+
+<%= render "form", message: @message %>
+
+<br>
+
+<div class="mt-3">
+  <%= link_to "Show this Message", project_discussion_message_path(@project, @discussion, @message), class: "btn btn-info" %>
+  <%= link_to "Back to Discussion", project_discussion_path(@project, @discussion), class: "btn btn-secondary ms-2" %>
+</div>
