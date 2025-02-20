@@ -1,2 +1,75 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div class="container mt-5">
+  <!-- Welcome Section -->
+  <div class="jumbotron bg-primary text-white py-4 rounded text-center">
+    <h1 class="display-5">Welcome back, <%= current_user.email %>!</h1>
+    <p class="lead">Manage your projects and collaborate with your team effortlessly.</p>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row text-center mt-4">
+    <div class="col-md-4">
+      <a href="<%= new_project_path %>" class="btn btn-success btn-lg w-100">
+        <i class="fas fa-folder-plus"></i> Create New Project
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="<%= projects_path %>" class="btn btn-info btn-lg w-100">
+        <i class="fas fa-list"></i> View All Projects
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="<%= edit_user_registration_path %>" class="btn btn-outline-secondary btn-lg w-100">
+        <i class="fas fa-user-cog"></i> Update Profile
+      </a>
+    </div>
+  </div>
+
+  <!-- Admin Management (Only for Admins) -->
+  <% if current_user.admin? %>
+    <div class="mt-5">
+      <h2>🛠️ Admin Management</h2>
+      <div class="row text-center">
+        <div class="col-md-6">
+          <a href="<%= users_path %>" class="btn btn-danger btn-lg w-100">
+            <i class="fas fa-users-cog"></i> Manage Users
+          </a>
+        </div>
+
+  <% end %>
+
+  <!-- User Projects -->
+  <div class="mt-5">
+    <h2>📂 Your Projects</h2>
+    <% if current_user.projects.any? %>
+      <div class="list-group">
+        <% current_user.projects.each do |project| %>
+          <a href="<%= project_path(project) %>" class="list-group-item list-group-item-action">
+            <strong><%= project.name %></strong> - Created on <%= project.created_at.strftime("%B %d, %Y") %>
+          </a>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted">You haven't created any projects yet.</p>
+    <% end %>
+  </div>
+
+  <!-- Recent Discussions -->
+  <div class="mt-5">
+    <h2>💬 Recent Discussions</h2>
+
+    <% user_discussions = current_user.projects.map(&:discussions).flatten %>
+
+    <% if user_discussions.any? %>
+      <div class="list-group">
+        <% user_discussions.last(5).each do |discussion| %>
+          <a href="<%= project_discussion_path(discussion.project, discussion) %>" class="list-group-item list-group-item-action">
+            <strong><%= discussion.title %></strong> 
+            <small class="text-muted"> - Last updated <%= time_ago_in_words(discussion.updated_at) %> ago</small>
+          </a>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted">No discussions yet. Start a conversation!</p>
+    <% end %>
+  </div>
+</div>

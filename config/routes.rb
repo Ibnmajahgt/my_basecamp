@@ -20,8 +20,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # ✅ Updated "About" page route to be clean and standard
+  get "about", to: "pages#about"  # Make sure you have a PagesController with an `about` action
+
   # Other routes
-  get "home/about"
   root "home#index"
   get "up" => "rails/health#show", as: :rails_health_check
 end

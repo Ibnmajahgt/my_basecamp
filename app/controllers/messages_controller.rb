@@ -3,6 +3,7 @@ class MessagesController < ApplicationController
   before_action :set_project_and_discussion
   before_action :set_message, only: [:show, :edit, :update, :destroy]
   before_action :authorize_user!, only: [:edit, :update, :destroy]
+  before_action :authorize_reply!, only: [:create]
 
   def show
     # This will render show.html.erb for the message
@@ -27,7 +28,7 @@ class MessagesController < ApplicationController
       render :new
     end
   end
-  
+
   def edit
   end
 
@@ -67,6 +68,13 @@ class MessagesController < ApplicationController
 
     redirect_to project_discussion_path(@project, @discussion), alert: "You are not authorized to perform this action."
   end
+
+  def authorize_reply!
+    unless current_user.admin? || @project.user == current_user
+      redirect_to project_discussion_path(@project, @discussion), alert: "You are not authorized to reply."
+    end
+  end
+  
 
   def message_params
     params.require(:message).permit(:content)

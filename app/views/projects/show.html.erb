@@ -65,18 +65,18 @@
             <% end %>
 
             <!-- Reply Button -->
-            <% if user_signed_in? %>
+            <% if current_user.admin? || @project.user == current_user %>
               <%= link_to "Reply", new_project_discussion_message_path(@project, discussion), class: "btn btn-primary mt-2 btn-sm" %>
             <% end %>
           </li>
         <% end %>
       </ul>
     <% else %>
-      <p>No discussions yet.</p>
+      <p>No Thread yet.</p>
     <% end %>
 
     <% if user_signed_in? && current_user.admin? %>
-      <%= link_to "Create Discussion", new_project_discussion_path(@project), class: "btn btn-primary mt-3" %>
+      <%= link_to "Create Thread", new_project_discussion_path(@project), class: "btn btn-primary mt-3" %>
     <% end %>
   </div>
 </div>
