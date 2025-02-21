@@ -29,6 +29,8 @@ gem "solid_queue"
 gem "solid_cable"
 gem 'devise', '~> 4.9', '>= 4.9.4'
 gem "rolify"
+gem 'pg'
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
