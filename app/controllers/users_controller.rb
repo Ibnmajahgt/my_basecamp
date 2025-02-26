@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: %i[show edit update destroy assign_admin remove_admin]
-  before_action :authorize_admin, only: [:index, :new, :create, :assign_admin, :remove_admin]
 
   def index
     @users = User.all
@@ -19,10 +18,9 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-  
+
     respond_to do |format|
       if @user.save
-        # Assign admin role if checkbox is checked
         @user.add_role(:admin) if params[:user][:admin] == "1"
         format.html { redirect_to users_path, notice: "User created successfully." }
         format.json { render :show, status: :created, location: @user }
@@ -32,7 +30,6 @@ class UsersController < ApplicationController
       end
     end
   end
-  
 
   def update
     respond_to do |format|
@@ -55,21 +52,19 @@ class UsersController < ApplicationController
     end
   end
 
+  # ✅ Any user can assign admin role
   def assign_admin
-    if current_user == @user
-      redirect_to users_path, alert: "You cannot assign yourself as Admin."
-    elsif !@user.has_role?(:admin)
+    if @user.has_role?(:admin)
+      redirect_to users_path, alert: "User is already an Admin."
+    else
       @user.add_role(:admin)
       redirect_to users_path, notice: "Admin role assigned successfully."
-    else
-      redirect_to users_path, alert: "User is already an Admin."
     end
   end
 
+  # ✅ Any user can remove admin role
   def remove_admin
-    if current_user == @user
-      redirect_to users_path, alert: "You cannot remove yourself as Admin."
-    elsif @user.has_role?(:admin)
+    if @user.has_role?(:admin)
       @user.remove_role(:admin)
       redirect_to users_path, notice: "Admin role removed successfully."
     else
@@ -79,16 +74,12 @@ class UsersController < ApplicationController
 
   private
 
-  def authorize_admin
-    redirect_to root_path, alert: "Access denied!" unless current_user.has_role?(:admin)
-  end
-
   def set_user
     @user = User.find_by(id: params[:id])
     redirect_to users_path, alert: "User not found" unless @user
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :admin)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
   end
 end
