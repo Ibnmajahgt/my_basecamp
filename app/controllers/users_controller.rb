@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: %i[show edit update destroy assign_admin remove_admin]
+  before_action :authorize_admin, only: [:index, :new, :create]
 
   def index
     @users = User.all
@@ -21,6 +22,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        # Assign admin role if checkbox is checked
         @user.add_role(:admin) if params[:user][:admin] == "1"
         format.html { redirect_to users_path, notice: "User created successfully." }
         format.json { render :show, status: :created, location: @user }
@@ -74,12 +76,18 @@ class UsersController < ApplicationController
 
   private
 
+  def authorize_admin
+    redirect_to root_path, alert: "Access denied!" unless current_user.has_role?(:admin)
+  end
+
   def set_user
     @user = User.find_by(id: params[:id])
     redirect_to users_path, alert: "User not found" unless @user
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation).tap do |whitelisted|
+      whitelisted[:admin] = params[:user][:admin] if params[:user][:admin].present?
+    end
   end
 end

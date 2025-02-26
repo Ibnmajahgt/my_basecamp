@@ -22,7 +22,6 @@ Rails.application.routes.draw do
 
   # ✅ Updated "About" page route to be clean and standard
   get "about", to: "pages#about"  # Make sure you have a PagesController with an `about` action
-  
 
   # Other routes
   root "home#index"
